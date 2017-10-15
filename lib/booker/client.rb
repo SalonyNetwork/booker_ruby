@@ -9,7 +9,6 @@ module Booker
     REFRESH_TOKEN_GRANT_TYPE = 'refresh_token'.freeze
     CREATE_TOKEN_PATH = '/v5/auth/connect/token'.freeze
     UPDATE_TOKEN_CONTEXT_PATH = '/v5/auth/context/update'.freeze
-    VALID_ACCESS_TOKEN_SCOPES = %w(public merchant parter-payment internal).map(&:freeze).freeze
     API_GATEWAY_ERRORS = {
       503 => Booker::ServiceUnavailable,
       504 => Booker::ServiceUnavailable,
@@ -40,11 +39,6 @@ module Booker
         rescue JWT::ExpiredSignature => ex
           raise ex unless self.auth_with_client_credentials || self.refresh_token.present?
         end
-      end
-      if self.access_token_scope.blank?
-        self.access_token_scope = VALID_ACCESS_TOKEN_SCOPES.first
-      elsif !self.access_token_scope.in?(VALID_ACCESS_TOKEN_SCOPES)
-        raise ArgumentError, "access_token_scope must be one of: #{VALID_ACCESS_TOKEN_SCOPES.join(', ')}"
       end
     end
 
