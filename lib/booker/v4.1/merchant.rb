@@ -8,6 +8,7 @@ module Booker
       V41_APPOINTMENTS_PREFIX = "#{V41_PREFIX}/appointments"
       API_METHODS = {
         appointments: "#{V41_APPOINTMENTS_PREFIX}".freeze,
+        create_appointment: "#{V41_APPOINTMENTS_PREFIX}/appointment".freeze,
         appointments_partial: "#{V41_APPOINTMENTS_PREFIX}/partial".freeze,
         appointment_confirm: "#{V41_PREFIX}/appointment/confirm".freeze,
         customers: "#{V41_PREFIX}/customers".freeze,
@@ -125,6 +126,15 @@ module Booker
           includeFieldValues: false
         }
         get("#{V41_PREFIX}/customer/#{id}", build_params(additional_params, params), Booker::V4::Models::Customer)
+      end
+
+      def create_appointment(location_id:, customer:, appointment_date:)
+        post(API_METHODS[:create_appointment], build_params(
+            LocationID: location_id,
+            Customer: customer,
+            AppointmentDate: appointment_date
+          )
+        )
       end
 
       def create_special(location_id:, start_date:, end_date:, coupon_code:, name:, params: {})

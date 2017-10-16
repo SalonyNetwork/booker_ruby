@@ -2,6 +2,8 @@ module Booker
   class Model
     CONSTANTIZE_MODULE = Booker
 
+    attr_reader :attributes
+
     def initialize(options = {})
       @attributes = []
       options.each do |k, v|
@@ -46,9 +48,11 @@ module Booker
             end
           end
           if v.is_a?(String) && v.start_with?('/Date(')
+            model.attributes.push(k)
             model.send(:"#{k}=", try(:time_from_booker_datetime, v) || v)
             next
           end
+          model.attributes.push(k)
           model.send(:"#{k}=", v)
         end
       end
